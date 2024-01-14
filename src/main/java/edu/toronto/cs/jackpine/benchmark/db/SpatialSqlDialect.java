@@ -34,7 +34,7 @@ import edu.toronto.cs.jackpine.benchmark.scenarios.macroscenario.VisitScenario;
  */
 public interface SpatialSqlDialect extends SqlDialect
 {
-  public static  enum SupportedSqlDialect {Informix, Ingres, Mysql, PostgreSQL };
+  public static  enum SupportedSqlDialect {Informix, Ingres, Mysql, PostgreSQL, Polypheny };
 	
   public SupportedSqlDialect getSqlDialectType();
   /**

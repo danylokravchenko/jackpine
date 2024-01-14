@@ -8,7 +8,7 @@
 BHOME=`pwd`
 
 # Load all jars from the lib and lib-ext directories. 
-for jar in $BHOME/lib/*.jar
+for jar in $BHOME/libs/*.jar
 do
   if [ -z $CP ]; then
     CP=$jar

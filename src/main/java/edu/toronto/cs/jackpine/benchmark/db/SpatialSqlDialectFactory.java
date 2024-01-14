@@ -25,18 +25,14 @@ package edu.toronto.cs.jackpine.benchmark.db;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.log4j.Logger;
-
-import edu.toronto.cs.jackpine.benchmark.scenarios.EnvHazardMacroScenario;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author sray
  *
  */
+@Slf4j
 public class SpatialSqlDialectFactory {
-
-    private static final Logger logger = Logger.getLogger( SpatialSqlDialectFactory.class );
     private static final SpatialSqlDialectFactory instance = new SpatialSqlDialectFactory();
 
     // Declare and initialized dialect support.
@@ -78,7 +74,7 @@ public class SpatialSqlDialectFactory {
                 String className = dialects.get( i ).getClass().toString();
                 className = className.substring( className.lastIndexOf( ".SqlDialectFor" ) + 1 );
                 System.out.println( "\nRunning scenario for " + className );
-                logger.warn( "\nRunning scenario for " + className );
+                log.warn( "\nRunning scenario for " + className );
                 return dialects.get( i );
             }
         }
