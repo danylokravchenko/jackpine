@@ -1,0 +1,313 @@
+import org.jetbrains.gradle.ext.Gradle
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        flatDir {
+            dirs 'libs'
+        }
+    }
+    dependencies {
+        classpath group: "com.adarshr", name: "gradle-test-logger-plugin", version: gradle_test_logger_version
+        classpath group: "com.jaredsburrows", name: "gradle-license-plugin", version: license_report_version
+        classpath group: "io.freefair.gradle", name: "lombok-plugin", version: lombok_version
+    }
+}
+
+
+plugins {
+    id 'java'
+    id 'idea'
+    id 'checkstyle'
+    id 'application'
+    id "org.jetbrains.gradle.plugin.idea-ext" version "1.1.7"
+}
+
+
+test {
+    useJUnitPlatform()
+}
+
+configurations {
+    //javacc
+    tests {
+        extendsFrom testRuntimeOnly
+    }
+    testClasses {
+        extendsFrom testImplementation
+    }
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+allprojects {
+
+    version = versionMajor + "." + versionMinor + "." + versionMicro
+    isRelease = isRelease.toBoolean()
+    if (!isRelease) {
+        version = version + "-SNAPSHOT"
+    }
+
+    buildscript {
+        repositories {
+            mavenCentral()
+            maven {
+                url "https://plugins.gradle.org/m2/"
+            }
+            maven {
+                url "https://clojars.org/repo/"
+            }
+            flatDir {
+                dirs 'libs'
+            }
+        }
+    }
+
+    apply plugin: "java-library"
+    apply plugin: "checkstyle"
+    apply plugin: "application"
+    apply plugin: "io.freefair.lombok"
+    apply plugin: "com.adarshr.test-logger"
+    apply plugin: "com.jaredsburrows.license"
+
+    mainClassName = 'edu.toronto.cs.jackpine.benchmark.JackpineBenchmarkLauncher'
+
+    sourceSets {
+        main {
+            java {
+                srcDirs = ["src/main/java"]
+            }
+            resources {
+                srcDirs = ["src/main/resources"]
+                exclude "version/*.properties"
+            }
+            output.resourcesDir = file(project.buildDir.absolutePath + "/classes")
+        }
+        test {
+            java {
+                srcDirs = ["src/test/java"]
+                destinationDirectory.set(file(project.buildDir.absolutePath + "/test-classes"))
+            }
+            resources {
+                // We need the main resources for the tests as well.
+                srcDirs = ["src/test/resources", "src/main/resources"]
+            }
+            output.resourcesDir = file(project.buildDir.absolutePath + "/test-classes")
+        }
+    }
+
+    compileJava.options.encoding = "UTF-8"
+    compileTestJava.options.encoding = "UTF-8"
+    javadoc.options.encoding = "UTF-8"
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = "UTF-8"
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven {
+            url "https://clojars.org/repo/"
+        }
+        flatDir {
+            dirs 'libs'
+        }
+    }
+
+    configurations.all {
+        // check for updates every build
+        resolutionStrategy.cacheChangingModulesFor 0, "seconds"
+    }
+
+    tasks.withType(Javadoc) {
+        if (JavaVersion.current().isJava9Compatible()) {
+            options.addBooleanOption("html5", true)
+        }
+        // Suppress most of the warnings
+        options.addStringOption("Xdoclint:none", "-quiet")
+        // Include private fields in JavaDoc
+        options.memberLevel = JavadocMemberLevel.PRIVATE
+    }
+
+    testlogger {
+        theme 'standard'
+        showExceptions true
+        showStackTraces true
+        showFullStackTraces false
+        showCauses true
+        slowThreshold 2000
+        showSummary true
+        showSimpleNames false
+        showPassed false
+        showSkipped false
+        showFailed true
+        showStandardStreams true
+        showPassedStandardStreams false
+        showSkippedStandardStreams false
+        showFailedStandardStreams true
+        logLevel 'lifecycle'
+    }
+
+    dependencies {
+        ////// Logging
+        implementation group: "org.apache.logging.log4j", name: "log4j-core", version: log4j_core_version  // Apache 2.0
+        implementation group: "org.apache.logging.log4j", name: "log4j-api", version: log4j_api_version  // Apache 2.0
+        implementation group: "org.apache.logging.log4j", name: "log4j-slf4j-impl", version: log4j_slf4j_impl_version  // Apache 2.0
+
+        ////// SLF4J
+        implementation group: "org.pf4j", name: "pf4j", version: pf4j_version  // Apache 2.0
+        implementation group: "io.javalin", name: "javalin", version: javalin_version  // Apache 2.0
+        ////// PF4J
+        compileOnly(group: 'org.pf4j', name: 'pf4j', version: pf4j_version) {
+            exclude group: "org.slf4j"
+        }
+        annotationProcessor group: 'org.pf4j', name: 'pf4j', version: pf4j_version
+
+        implementation group: 'org.polypheny', name: 'polypheny-jdbc-driver', version: polypheny_jdbc_driver_version // Apache 2.0
+        implementation group: "org.postgresql", name: "postgresql", version: postgresql_version  // BSD 2-clause
+
+        implementation files('libs/bristlecone.jar')
+        implementation files('libs/idxjdbc.jar')
+        implementation files('libs/spatial.jar')
+
+        testCompileOnly(group: 'org.pf4j', name: 'pf4j', version: pf4j_version) {
+            exclude group: "org.slf4j"
+        }
+        testImplementation(group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junit_jupiter_version)
+        testRuntimeOnly(group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junit_jupiter_version)
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    licenseReport {
+        generateJsonReport = true
+        generateCsvReport = false
+        generateHtmlReport = false
+        generateTextReport = false
+    }
+
+    idea {
+        module {
+            downloadJavadoc = true
+            downloadSources = true
+
+            inheritOutputDirs = false
+            outputDir = file("${project.buildDir}/classes")
+            testOutputDir = file("${project.buildDir}/test-classes")
+
+            generatedSourceDirs += file("${project.buildDir}/generated-sources")
+            generatedSourceDirs += file("${project.buildDir}/generated-test-sources")
+        }
+    }
+
+    checkstyle {
+        toolVersion '10.12.7'
+        configFile file("config/checkstyle/checkstyle.xml")
+    }
+    checkstyleMain {
+        source ='src/edu/toronto/cs/jackpine/benchmark'
+    }
+
+}
+
+task gatherLicenseReports(type: Copy) {
+    // Define the destination directory for the reports
+    def destinationDir = "${rootProject.buildDir}/reports/licenses"
+
+    // Go through each subproject
+    subprojects.each { subproject ->
+        from("${subproject.buildDir}/reports/licenses") {
+            include 'licenseReport.json'
+            // Rename the report file to include the module name
+            rename { String fileName ->
+                "${subproject.name}-$fileName"
+            }
+        }
+    }
+
+    // Set the destination for the copied files
+    into destinationDir
+}
+gradle.projectsEvaluated { // Make sure the task runs after all projects are evaluated
+    gatherLicenseReports.dependsOn subprojects*.tasks*.findByName('licenseReport')
+}
+
+/**
+ * JARs
+ */
+jar {
+    manifest {
+        attributes "Manifest-Version": "1.0"
+        attributes "Copyright": "Jackpine"
+        attributes "Version": "$project.version"
+    }
+}
+task sourcesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier = "sources"
+    from sourceSets.main.allSource
+}
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    archiveClassifier = "javadoc"
+    from javadoc.destinationDir
+}
+task testJar(type: Jar, dependsOn: testClasses) {
+    archiveClassifier = "tests"
+    from sourceSets.test.output
+}
+artifacts {
+    //archives jar // regular jar containing only the compiled source
+    archives sourcesJar // jar file containing the java doc files
+    archives javadocJar // jar file containing the source files
+    tests testJar // jar file containing the test classes
+}
+
+idea {
+    project {
+        settings {
+            runConfigurations {
+                "jackpine"(Gradle) {
+                    taskNames = ["run"]
+                }
+            }
+            copyright {
+                useDefault = "jackpine_GPL"
+                profiles {
+                    jackpine_GPL {
+                        notice = 'Jackpine Spatial Database Benchmark\n' +
+                                ' Copyright (C) 2010 University of Toronto\n' +
+                                '\n' +
+                                'This program is free software; you can redistribute it and/or modify\n' +
+                                'it under the terms of version 2 of the GNU General Public License as\n' +
+                                'published by the Free Software Foundation.\n' +
+                                '\n' +
+                                'This program is distributed in the hope that it will be useful,\n' +
+                                'but WITHOUT ANY WARRANTY; without even the implied warranty of\n' +
+                                'MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n' +
+                                'GNU General Public License for more details.\n' +
+                                '\n' +
+                                'You should have received a copy of the GNU General Public License\n' +
+                                'along with this program; if not, write to the Free Software\n' +
+                                'Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA\n' +
+                                '\n' +
+                                'Developer: S. Ray\n' +
+                                'Initial developer(s): Robert Hodges and Ralph Hannus.\n' +
+                                'Contributor(s): Danylo Kravchenko'
+                        keyword = "Copyright"
+                    }
+                }
+            }
+        }
+    }
+}

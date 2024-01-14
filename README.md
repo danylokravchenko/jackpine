@@ -1,12 +1,12 @@
-## JackPine - A Geospatial Benchmark (Version 2.0)
+## JackPine - A Geospatial Benchmark (Version 3.0)
 
-A modified code to match current PostgreSQL database versions.
+A modified code to match current databases versions.
 
 Changes:
 ```
-- Added Prerequisite JARs.
-- Added support to build code with ant.
+- Manage dependencies and build code with gradle.
 - Changed Dialects and tables to support new data and tools.
+- Introduced PolyphenyDB support.
 ```
 
 To Do:
@@ -15,7 +15,7 @@ To Do:
 - Add more data support.
 ```
 
-If you are using this benchmark, please cite the following papers.
+If you are using this benchmark, please cite the following (original) papers.
 
 ```
 @article{10.14778/3503585.3503600,
