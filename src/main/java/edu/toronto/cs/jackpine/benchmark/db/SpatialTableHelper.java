@@ -1,7 +1,7 @@
 /**
- * Jackpine Spatial Database Benchmark 
- *  Copyright (C) 2010 University of Toronto
- * 
+ * Jackpine Spatial Database Benchmark
+ * Copyright (C) 2010 University of Toronto
+ *
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of version 2 of the GNU General Public License as
@@ -17,44 +17,40 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  *
  * Developer: S. Ray
- * Contributor(s): 
+ * Contributor(s):
  */
 
-package  edu.toronto.cs.jackpine.benchmark.db;
+package edu.toronto.cs.jackpine.benchmark.db;
 
 import com.continuent.bristlecone.benchmark.db.TableHelper;
 
 /**
  * Implements methods to create, drop, and populate individual tables. 
- * 
+ *
  */
-public class SpatialTableHelper extends TableHelper
-{
+public class SpatialTableHelper extends TableHelper {
 
-  protected final SpatialSqlDialect spatialSqlDialect;
-  
-  /** 
-   * Creates a new instance. 
-   * 
-   * @param url JDBC URL of database where tables live 
-   * @param login
-   * @param password
-   * @throws BenchmarkException If JDBC driver cannot be loaded or we can't 
-   *         find the SqlDialect. 
-   */
-  public SpatialTableHelper(String url, String login, String password)
-  {
-    super(url,login,password);
-    this.spatialSqlDialect = SpatialSqlDialectFactory.getInstance().getDialect(url);
-  }
-  
-  
-  
-  /** 
-   * Returns the SQLDialect used by this helper. 
-   */
-  public SpatialSqlDialect getSpatialSqlDialect()
-  {
-    return spatialSqlDialect;
-  }
+    protected final SpatialSqlDialect spatialSqlDialect;
+
+
+    /**
+     * Creates a new instance.
+     *
+     * @param url JDBC URL of database where tables live
+     * @param login username
+     * @param password for the login username
+     */
+    public SpatialTableHelper( String url, String login, String password ) {
+        super( url, login, password );
+        this.spatialSqlDialect = SpatialSqlDialectFactory.getInstance().getDialect( url );
+    }
+
+
+    /**
+     * Returns the SQLDialect used by this helper.
+     */
+    public SpatialSqlDialect getSpatialSqlDialect() {
+        return spatialSqlDialect;
+    }
+
 }

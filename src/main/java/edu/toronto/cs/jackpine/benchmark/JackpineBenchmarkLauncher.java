@@ -45,8 +45,6 @@ public class JackpineBenchmarkLauncher {
      */
     public static void main( String[] argv ) throws Exception {
         String props = null;
-        String csv = null;
-        String text = null;
         String html = null;
         String include = null;
 
@@ -58,16 +56,6 @@ public class JackpineBenchmarkLauncher {
             if ( "-props".equals( nextArg ) ) {
                 props = argv[argc++];
             }
-            /*
-            else if ("-text".equals(nextArg))
-            {
-            text = argv[argc++];
-            }
-            else if ("-csv".equals(nextArg))
-            {
-            csv = argv[argc++];
-            }
-            */
             else if ( "-html".equals( nextArg ) ) {
                 html = argv[argc++];
             } else if ( "-include".equals( nextArg ) ) {
@@ -76,8 +64,7 @@ public class JackpineBenchmarkLauncher {
                 usage();
                 return;
             } else {
-                String msg = "Unrecognized flag (try -help for usage): " + nextArg;
-                println( msg );
+                println( "Unrecognized flag (try -help for usage): " + nextArg );
                 exitWithFailure();
             }
         }
@@ -89,13 +76,6 @@ public class JackpineBenchmarkLauncher {
             if ( props != null ) {
                 benchmark.setProps( props );
             }
-            /*
-            if (text != null)
-            benchmark.setText(text);
-            if (csv != null)
-            benchmark.setCsv(csv);
-            if (html != null)
-            */
             benchmark.setHtml( html );
             if ( include != null ) {
                 benchmark.setOverridenIncludePropertyName( include );
@@ -123,7 +103,7 @@ public class JackpineBenchmarkLauncher {
      * Print to standard out.
      */
     protected static void println( String message ) {
-        System.out.println( message );
+        log.warn( message );
     }
 
 
@@ -133,9 +113,6 @@ public class JackpineBenchmarkLauncher {
     protected static void usage() {
         println( "Usage: java " + JackpineBenchmarkLauncher.class.getName() + " options " );
         println( "  -props propsfile  Scenario properties file (default=benchmark.properties" );
-        //println("  -text file        Log results as text report in 'file'");
-        //println("  -graph            Log results to dynamically generated graph");
-        //println("  -csv file         Log results as CSV in 'file'");
         println( "  -html file        Log results as HTML report in 'file'" );
         println( "  -help             Print usage" );
         println( "Properties file must have at least scenario, url, and user values to run" );

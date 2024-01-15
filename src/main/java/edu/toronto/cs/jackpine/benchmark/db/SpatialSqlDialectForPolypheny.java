@@ -50,7 +50,7 @@ public class SpatialSqlDialectForPolypheny extends SqlDialectForPolypheny implem
      */
     @Override
     public String getSelectAllFeaturesWithinADistanceFromPoint() {
-        return "SELECT count(*) FROM arealm_merge WHERE ST_Distance(geom, ST_GeomFromText('Point (-97.7 30.30), " + SRID + ")) < 1000";
+        return "SELECT count(*) FROM arealm_merge WHERE ST_Distance(geom, ST_GeomFromText('Point (-97.7 30.30)', " + SRID + ")) < 1000";
     }
 
 
@@ -104,7 +104,7 @@ public class SpatialSqlDialectForPolypheny extends SqlDialectForPolypheny implem
 
     @Override
     public String getSelectBoundingBoxSearch() {
-        return "select count(*) from edges_merge " + "where ST_Within( geom, ST_GeomFromText('POLYGON((-97.7 30.30, -92.7 30.30, -92.7 27.30, -97.7 27.30, -97.7 30.30))') ," + SRID + "))";
+        return "select count(*) from edges_merge " + "where ST_Within( geom, ST_GeomFromText('POLYGON((-97.7 30.30, -92.7 30.30, -92.7 27.30, -97.7 27.30, -97.7 30.30))' ," + SRID + "))";
     }
 
 

@@ -15,6 +15,28 @@ To Do:
 - Add more data support.
 ```
 
+Dataset
+-------
+Dataset is described well in the original papers. 
+Furthermore, it could be downloaded from the links below:
+https://www.cs.toronto.edu/~suprio/jackpine/README
+http://www.cs.toronto.edu/~suprio/jackpine/dataset/
+
+How to run
+----------
+To run a single benchmark scenario called `ReadSpatialAreaContainsArea` over the Postgres:
+```shell
+./gradlew run --args="-include connection_postgresql_spatial.properties -props config/ReadSpatialAreaContainsArea.properties -html results/output.html"
+```
+
+To run all scenarios:
+```shell
+./jackpine.sh -i "connection_postgresql_spatial.properties"
+```
+
+Credits
+-------
+
 If you are using this benchmark, please cite the following (original) papers.
 
 ```

@@ -165,6 +165,10 @@ allprojects {
         implementation group: "org.apache.logging.log4j", name: "log4j-slf4j-impl", version: log4j_slf4j_impl_version  // Apache 2.0
 
         ////// SLF4J
+        // log4j is needed for the old libraries
+        implementation group: 'org.slf4j', name: 'slf4j-simple', version: sl4j_version
+        implementation group: 'org.slf4j', name: 'slf4j-api', version: sl4j_version
+        implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: sl4j_version
         implementation group: "org.pf4j", name: "pf4j", version: pf4j_version  // Apache 2.0
         implementation group: "io.javalin", name: "javalin", version: javalin_version  // Apache 2.0
         ////// PF4J
@@ -175,9 +179,11 @@ allprojects {
 
         implementation group: 'org.polypheny', name: 'polypheny-jdbc-driver', version: polypheny_jdbc_driver_version // Apache 2.0
         implementation group: "org.postgresql", name: "postgresql", version: postgresql_version  // BSD 2-clause
+        implementation group: "com.ibm.informix", name: "jdbc", version: informix_jdbc_version
+        implementation group: "com.mysql", name: "mysql-connector-j", version: mysql_jdbc_version
 
         implementation files('libs/bristlecone.jar')
-        implementation files('libs/idxjdbc.jar')
+        // implementation files('libs/idxjdbc.jar')
         implementation files('libs/spatial.jar')
 
         testCompileOnly(group: 'org.pf4j', name: 'pf4j', version: pf4j_version) {

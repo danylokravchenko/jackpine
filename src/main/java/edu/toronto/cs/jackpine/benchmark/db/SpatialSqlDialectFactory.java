@@ -23,40 +23,22 @@
 
 package edu.toronto.cs.jackpine.benchmark.db;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author sray
- *
  */
 @Slf4j
 public class SpatialSqlDialectFactory {
+
+    @Getter
     private static final SpatialSqlDialectFactory instance = new SpatialSqlDialectFactory();
 
     // Declare and initialized dialect support.
-    private static final List<SpatialSqlDialect> dialects;
-
-
-    static {
-        List<SpatialSqlDialect> al = new ArrayList<SpatialSqlDialect>();
-
-        al.add( new SpatialSqlDialectForInformix() );
-        al.add( new SpatialSqlDialectForIngres() );
-        al.add( new SpatialSqlDialectForMysql() );
-        al.add( new SpatialSqlDialectForPostgreSQL() );
-
-        dialects = al;
-    }
-
-
-    /**
-     * Returns factory instance.
-     */
-    public static SpatialSqlDialectFactory getInstance() {
-        return instance;
-    }
+    private static final List<SpatialSqlDialect> dialects = Arrays.asList( new SpatialSqlDialectForInformix(), new SpatialSqlDialectForIngres(), new SpatialSqlDialectForMysql(), new SpatialSqlDialectForPostgreSQL(), new SpatialSqlDialectForPolypheny() );
 
 
     /**
@@ -66,16 +48,13 @@ public class SpatialSqlDialectFactory {
      * @param url A JDBC URL
      */
     public SpatialSqlDialect getDialect( String url ) {
-        //System.out.println("*********** Inside getDialect()");
-        int count = dialects.size();
-        for ( int i = 0; i < count; i++ ) {
-            //System.out.println(dialects.get(i).getClass());
-            if ( dialects.get( i ).supportsJdbcUrl( url ) ) {
-                String className = dialects.get( i ).getClass().toString();
+        for ( SpatialSqlDialect dialect : dialects ) {
+            if ( dialect.supportsJdbcUrl( url ) ) {
+                String className = dialect.getClass().toString();
                 className = className.substring( className.lastIndexOf( ".SqlDialectFor" ) + 1 );
                 System.out.println( "\nRunning scenario for " + className );
                 log.warn( "\nRunning scenario for " + className );
-                return dialects.get( i );
+                return dialect;
             }
         }
         return null;
