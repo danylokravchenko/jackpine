@@ -37,7 +37,7 @@ import edu.toronto.cs.jackpine.benchmark.scenarios.macroscenario.VisitScenario;
  */
 public class SpatialSqlDialectForPostgreSQL extends SqlDialectForPostgreSQL implements SpatialSqlDialect
 {
-  static String SRID = "";
+  static String SRID;
   
   static {
 	  ResourceBundle rs = ResourceBundle.getBundle("connection_general");

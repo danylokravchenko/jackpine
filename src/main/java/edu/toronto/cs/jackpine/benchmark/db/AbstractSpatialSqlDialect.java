@@ -26,12 +26,11 @@ import com.continuent.bristlecone.benchmark.db.AbstractSqlDialect;
 
 
 /**
- *
  * @author sray
  */
 public abstract class AbstractSpatialSqlDialect extends AbstractSqlDialect implements SpatialSqlDialect {
 
     SupportedSqlDialect sqlDialectType;
 
-  
+
 }

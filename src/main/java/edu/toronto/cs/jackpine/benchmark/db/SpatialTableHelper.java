@@ -22,7 +22,7 @@
 
 package edu.toronto.cs.jackpine.benchmark.db;
 
-import com.continuent.bristlecone.benchmark.db.TableHelper;
+import edu.toronto.cs.jackpine.benchmark.db.bristlecone.TableHelper;
 
 /**
  * Implements methods to create, drop, and populate individual tables. 

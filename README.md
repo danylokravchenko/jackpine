@@ -37,6 +37,8 @@ To run all scenarios:
 Credits
 -------
 
+- https://github.com/shutterstock/bristlecone
+
 If you are using this benchmark, please cite the following (original) papers.
 
 ```

@@ -27,7 +27,7 @@ import java.util.ResourceBundle;
 
 public class SpatialSqlDialectForPolypheny extends SqlDialectForPolypheny implements SpatialSqlDialect {
 
-    static String SRID = "";
+    static String SRID;
 
 
     static {
